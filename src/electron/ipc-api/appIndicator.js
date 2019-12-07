@@ -25,6 +25,12 @@ export default (params) => {
   });
 
   ipcMain.on('updateAppIndicator', (event, args) => {
+    // Exception for Slack: • indicator is when there are new messages, but there
+    // should be no notification (the Slack app displays a green badge).
+    if (args.indicator === '•') {
+      args.indicator = 0;
+    }
+
     // Update badge
     if (process.platform === 'darwin'
       && typeof (args.indicator) === 'string') {
